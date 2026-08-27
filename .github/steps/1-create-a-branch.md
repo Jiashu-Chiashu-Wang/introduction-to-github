@@ -2,8 +2,6 @@
 
 _Welcome to "Introduction to GitHub"! :wave:_
 
-**Already familiar with GitHub and want to complete the exercise quickly? Comment `/fast` in this issue and wait for Mona to send you the Fast Track checklist.**
-
 **What is GitHub?**: GitHub is a collaboration platform that uses _[Git](https://docs.github.com/get-started/quickstart/github-glossary#git)_ for versioning.
 GitHub is a popular place to share and contribute to [open-source](https://docs.github.com/get-started/quickstart/github-glossary#open-source) software.
 

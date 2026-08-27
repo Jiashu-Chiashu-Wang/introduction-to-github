@@ -56,7 +56,7 @@ jobs:
             const issueNumber = Number(process.env.ISSUE_NUMBER);
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            const stateMarker = '<!-- advanced-fast-track-state -->';
+            const stateMarker = '<!-- advanced-fast-track-state frontier:';
             const isFastCommand = context.eventName === 'issue_comment' &&
               context.payload.comment?.body.trim() === '/fast' &&
               !context.payload.issue.pull_request;
@@ -73,7 +73,7 @@ jobs:
               issue_number: issueNumber,
               per_page: 100,
             });
-            const stateComment = comments.find((comment) => comment.body?.includes(stateMarker));
+            const stateComment = comments.find((comment) => comment.body?.includes('<!-- advanced-fast-track-state frontier:'));
 
             if (!stateComment && !isFastCommand) {
               core.setOutput('completed', 'false');
@@ -84,7 +84,7 @@ jobs:
             let frontier = 0;
 
             if (stateComment) {
-              const match = stateComment.body.match(/frontier:\s*(\d+)/);
+              const match = stateComment.body.match(/<!-- advanced-fast-track-state frontier:(\d+)-->/);
               frontier = match ? Number(match[1]) : 0;
             }
 
@@ -169,10 +169,9 @@ jobs:
               `${index < frontier ? '- [x]' : '- [ ]'} ${task}`
             ).join('\n');
             const body = [
-              stateMarker,
-              `frontier: ${frontier}`,
+              `<!-- advanced-fast-track-state frontier:${frontier}-->`,
               '',
-              '### Advanced Fast Track progress',
+              '### Advanced Fast Track',
               '',
               progress,
             ].join('\n');

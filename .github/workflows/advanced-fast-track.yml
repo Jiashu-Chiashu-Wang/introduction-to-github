@@ -152,11 +152,11 @@ jobs:
               const pullRequest = await findPullRequest();
               if (taskNumber === 5) return Boolean(pullRequest);
               if (taskNumber === 6) {
-                return Boolean(pullRequest?.title.toLowerCase().includes('add my first file'));
+                return Boolean(pullRequest?.title.toLowerCase().includes('add my first file')) &&
+                  Boolean(pullRequest?.body?.trim());
               }
-              if (taskNumber === 7) return Boolean(pullRequest?.body?.trim());
-              if (taskNumber === 8) return Boolean(pullRequest?.merged_at);
-              if (taskNumber === 9) return Boolean(pullRequest?.merged_at) &&
+              if (taskNumber === 7) return Boolean(pullRequest?.merged_at);
+              if (taskNumber === 8) return Boolean(pullRequest?.merged_at) &&
                 !(await branchExists('my-first-branch'));
               return false;
             }

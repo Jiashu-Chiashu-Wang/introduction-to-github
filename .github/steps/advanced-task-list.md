@@ -3,7 +3,6 @@
 - Add `Welcome to my GitHub profile!` to `PROFILE.md`.
 - Commit the changes on `my-first-branch` with the message `Add PROFILE.md`.
 - Open a pull request from `my-first-branch` into `main`.
-- Set the pull request title to `Add my first file`.
-- Add a non-empty description to the pull request.
+- Set the pull request title to `Add my first file` and add a non-empty description.
 - Merge the pull request into `main`.
 - Delete `my-first-branch` after the pull request is merged.

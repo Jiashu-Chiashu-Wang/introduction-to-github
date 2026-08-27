@@ -15,10 +15,14 @@ on:
       - synchronize
       - reopened
       - closed
+  issue_comment:
+    types:
+      - created
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  actions: write
   issues: write
   pull-requests: read
 
@@ -36,6 +40,8 @@ jobs:
     needs: find_exercise
     if: ${{ !github.event.repository.is_template }}
     runs-on: ubuntu-latest
+    outputs:
+      completed: ${{ steps.evaluate.outputs.completed }}
     env:
       ISSUE_NUMBER: ${{ needs.find_exercise.outputs.issue-number }}
     steps:
@@ -43,6 +49,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Evaluate tasks and update progress
+        id: evaluate
         uses: actions/github-script@v7
         with:
           script: |
@@ -50,6 +57,9 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const stateMarker = '<!-- advanced-fast-track-state -->';
+            const isFastCommand = context.eventName === 'issue_comment' &&
+              context.payload.comment?.body.trim() === '/fast' &&
+              !context.payload.issue.pull_request;
             const taskFile = '.github/steps/advanced-task-list.md';
             const tasks = require('fs')
               .readFileSync(taskFile, 'utf8')
@@ -64,11 +74,29 @@ jobs:
               per_page: 100,
             });
             const stateComment = comments.find((comment) => comment.body?.includes(stateMarker));
+
+            if (!stateComment && !isFastCommand) {
+              core.setOutput('completed', 'false');
+              core.info('Fast Track is not selected; leaving the traditional mode unchanged.');
+              return;
+            }
+
             let frontier = 0;
 
             if (stateComment) {
               const match = stateComment.body.match(/frontier:\s*(\d+)/);
               frontier = match ? Number(match[1]) : 0;
+            }
+
+            if (isFastCommand && !stateComment) {
+              for (const workflow of [
+                '1-create-a-branch.yml',
+                '2-commit-a-file.yml',
+                '3-open-a-pull-request.yml',
+                '4-merge-your-pull-request.yml',
+              ]) {
+                await github.rest.actions.disableWorkflow({ owner, repo, workflow_id: workflow });
+              }
             }
 
             async function branchExists(branch) {
@@ -173,12 +201,18 @@ jobs:
             }
 
             if (frontier === tasks.length) {
-              await github.rest.issues.update({
-                owner,
-                repo,
-                issue_number: issueNumber,
-                state: 'closed',
-              });
+              core.setOutput('completed', 'true');
+            } else {
+              core.setOutput('completed', 'false');
             }
 
             core.info(`Advanced Fast Track frontier: ${frontier}/${tasks.length}`);
+
+  finish_exercise:
+    name: Finish Exercise
+    needs: [find_exercise, evaluate]
+    if: ${{ needs.evaluate.outputs.completed == 'true' }}
+    uses: skills/exercise-toolkit/.github/workflows/finish-exercise.yml@v0.7.0
+    with:
+      issue-url: ${{ needs.find_exercise.outputs.issue-url }}
+      exercise-title: "Introduction to GitHub"

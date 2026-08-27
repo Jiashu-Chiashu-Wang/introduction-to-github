@@ -25,6 +25,8 @@ Simply copy the exercise to your account, then give your favorite Octocat (Mona)
 
 [![](https://img.shields.io/badge/Copy%20Exercise-%E2%86%92-1f883d?style=for-the-badge&logo=github&labelColor=197935)](https://github.com/new?template_owner=skills&template_name=introduction-to-github&owner=%40me&name=skills-introduction-to-github&description=Exercise:+Introduction+to+GitHub&visibility=public)
 
+> **Already familiar with GitHub?** After creating the exercise, comment `/fast` in the exercise issue to use the Fast Track checklist instead of the step-by-step lessons.
+
 <details>
 <summary>Having trouble? 🤷</summary><br/>
 

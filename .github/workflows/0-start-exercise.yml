@@ -23,7 +23,7 @@ jobs:
     uses: skills/exercise-toolkit/.github/workflows/start-exercise.yml@v0.8.1
     with:
       exercise-title: "Introduction to GitHub"
-      intro-message: "Already familiar with GitHub and want to complete the exercise quickly? **Comment `/fast` in this issue** and wait for Mona to send you the Fast Track checklist.<br><br>If you are new to GitHub, you might find your fellow developers use ___**issues**___  to organize their work and collaborate. We will do the same! That's another lesson, but today, we will introduce you to the basics."
+      intro-message: "If you are new to GitHub, you might find your fellow developers use ___**issues**___  to organize their work and collaborate. We will do the same! That's another lesson, but today, we will introduce you to the basics."
 
   post_next_step_content:
     name: Post next step content
@@ -45,6 +45,13 @@ jobs:
           repository: skills/exercise-toolkit
           path: exercise-toolkit
           ref: v0.7.0
+
+      - name: Create comment - fast track prompt
+        uses: GrantBirki/comment@v2.1.1
+        with:
+          repository: ${{ env.ISSUE_REPOSITORY }}
+          issue-number: ${{ env.ISSUE_NUMBER }}
+          file: .github/steps/fast-track-prompt.md
 
       - name: Create comment - add step content
         uses: GrantBirki/comment@v2.1.1

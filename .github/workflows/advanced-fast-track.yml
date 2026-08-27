@@ -89,14 +89,7 @@ jobs:
             }
 
             if (isFastCommand && !stateComment) {
-              for (const workflow of [
-                '1-create-a-branch.yml',
-                '2-commit-a-file.yml',
-                '3-open-a-pull-request.yml',
-                '4-merge-your-pull-request.yml',
-              ]) {
-                await github.rest.actions.disableWorkflow({ owner, repo, workflow_id: workflow });
-              }
+              core.info('Fast Track selected. The progress comment will be created before disabling traditional workflows.');
             }
 
             async function branchExists(branch) {
@@ -198,6 +191,21 @@ jobs:
                 issue_number: issueNumber,
                 body,
               });
+            }
+
+            if (isFastCommand && !stateComment) {
+              for (const workflow of [
+                '1-create-a-branch.yml',
+                '2-commit-a-file.yml',
+                '3-open-a-pull-request.yml',
+                '4-merge-your-pull-request.yml',
+              ]) {
+                try {
+                  await github.rest.actions.disableWorkflow({ owner, repo, workflow_id: workflow });
+                } catch (error) {
+                  core.warning(`Could not disable ${workflow}: ${error.message}`);
+                }
+              }
             }
 
             if (frontier === tasks.length) {

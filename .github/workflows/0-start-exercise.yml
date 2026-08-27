@@ -60,13 +60,6 @@ jobs:
           issue-number: ${{ env.ISSUE_NUMBER }}
           file: exercise-toolkit/markdown-templates/step-feedback/watching-for-progress.md
 
-      - name: Create comment - fast track option
-        uses: GrantBirki/comment@v2.1.1
-        with:
-          repository: ${{ env.ISSUE_REPOSITORY }}
-          issue-number: ${{ env.ISSUE_NUMBER }}
-          file: .github/steps/fast-track-prompt.md
-
       - name: Disable current workflow and enable next one
         run: |
           gh workflow enable "Step 1"
